@@ -1,0 +1,18 @@
+import json
+from pathlib import Path
+
+
+class StorageManager:
+    def __init__(self, save_dir="data/saves"):
+        self.save_dir = Path(save_dir)
+        self.save_dir.mkdir(parents=True, exist_ok=True)
+
+    def save(self, filename: str, data: dict):
+        path = self.save_dir / filename
+        with open(path, "w") as f:
+            json.dump(data, f, indent=2)
+
+    def load(self, filename: str) -> dict:
+        path = self.save_dir / filename
+        with open(path, "r") as f:
+            return json.load(f)
