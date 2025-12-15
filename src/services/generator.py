@@ -1,32 +1,36 @@
 import random
 import string
-from domain.password import Password
-from services.policy import PasswordPolicy
+
+# Local Password model
+class Password:
+    def __init__(self, value: str):
+        self.value = value
+
+    @property
+    def length(self):
+        return len(self.value)
 
 
+# Enforces rules for passwords
+class PasswordPolicy:
+    def __init__(self, min_length=10):
+        self.min_length = min_length
+
+    def validate(self, password: Password):
+        return password.length >= self.min_length
+
+
+# Generates passwords
 class PasswordGenerator:
     def __init__(self, policy: PasswordPolicy):
         self.policy = policy
 
-    def generate(self, length=12) -> Password:
-        if length < self.policy.min_length:
-            raise ValueError("Length below policy minimum")
-
+    def generate(self, length=12):
         while True:
-            chars = [
-                random.choice(string.ascii_uppercase),
-                random.choice(string.ascii_lowercase),
-                random.choice(string.digits),
-                random.choice(string.punctuation),
-            ]
-
-            chars += random.choices(
+            chars = random.choices(
                 string.ascii_letters + string.digits + string.punctuation,
-                k=length - 4
+                k=length
             )
-
-            random.shuffle(chars)
             pwd = Password("".join(chars))
-
             if self.policy.validate(pwd):
                 return pwd

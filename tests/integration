@@ -1,0 +1,54 @@
+import string
+import math
+
+
+class Password:
+    def __init__(self, value):
+        self.value = value
+
+    @property
+    def length(self):
+        return len(self.value)
+
+    @property
+    def has_upper(self):
+        return any(c.isupper() for c in self.value)
+
+    @property
+    def has_lower(self):
+        return any(c.islower() for c in self.value)
+
+    @property
+    def has_digit(self):
+        return any(c.isdigit() for c in self.value)
+
+    @property
+    def has_special(self):
+        return any(c in string.punctuation for c in self.value)
+
+
+def analyze_password(password: Password):
+    pool = 0
+    if password.has_lower:
+        pool += 26
+    if password.has_upper:
+        pool += 26
+    if password.has_digit:
+        pool += 10
+    if password.has_special:
+        pool += len(string.punctuation)
+
+    entropy = round(password.length * math.log2(pool), 2)
+    return {
+        "length": password.length,
+        "entropy": entropy
+    }
+
+
+def test_full_analysis_flow():
+    pwd = Password("Abc123!")
+    results = analyze_password(pwd)
+
+    assert "length" in results
+    assert "entropy" in results
+    assert results["entropy"] > 0

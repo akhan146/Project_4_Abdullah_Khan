@@ -1,0 +1,39 @@
+import string
+
+
+class Password:
+    def __init__(self, value: str):
+        if not isinstance(value, str):
+            raise TypeError("Password must be a string")
+        if not value:
+            raise ValueError("Password cannot be empty")
+        self.value = value
+
+    @property
+    def length(self):
+        return len(self.value)
+
+    @property
+    def has_upper(self):
+        return any(c.isupper() for c in self.value)
+
+    @property
+    def has_lower(self):
+        return any(c.islower() for c in self.value)
+
+    @property
+    def has_digit(self):
+        return any(c.isdigit() for c in self.value)
+
+    @property
+    def has_special(self):
+        return any(c in string.punctuation for c in self.value)
+
+
+def test_password_basic_properties():
+    pwd = Password("Abc123!")
+    assert pwd.length == 7
+    assert pwd.has_upper
+    assert pwd.has_lower
+    assert pwd.has_digit
+    assert pwd.has_special
