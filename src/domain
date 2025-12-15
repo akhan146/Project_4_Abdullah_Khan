@@ -1,0 +1,42 @@
+from __future__ import annotations
+import string
+
+
+class Password:
+    def __init__(self, value: str):
+        if not isinstance(value, str):
+            raise TypeError("Password must be a string")
+        if not value:
+            raise ValueError("Password cannot be empty")
+        self._value = value
+
+    @property
+    def value(self) -> str:
+        return self._value
+
+    @property
+    def masked(self) -> str:
+        return "*" * len(self._value)
+
+    @property
+    def length(self) -> int:
+        return len(self._value)
+
+    @property
+    def has_upper(self) -> bool:
+        return any(c.isupper() for c in self._value)
+
+    @property
+    def has_lower(self) -> bool:
+        return any(c.islower() for c in self._value)
+
+    @property
+    def has_digit(self) -> bool:
+        return any(c.isdigit() for c in self._value)
+
+    @property
+    def has_special(self) -> bool:
+        return any(c in string.punctuation for c in self._value)
+
+    def __str__(self) -> str:
+        return f"Password(masked='{self.masked}', length={self.length})"
